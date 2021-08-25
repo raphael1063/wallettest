@@ -26,6 +26,9 @@ import org.web3j.crypto.Keys
 import org.web3j.crypto.ECKeyPair
 
 import org.json.JSONObject
+import org.web3j.contracts.eip20.generated.ERC20
+import org.web3j.protocol.core.DefaultBlockParameterName
+import org.web3j.tx.gas.DefaultGasProvider
 import java.security.InvalidAlgorithmParameterException
 import java.security.NoSuchAlgorithmException
 import java.security.NoSuchProviderException
@@ -33,12 +36,14 @@ import java.security.NoSuchProviderException
 
 class MainActivity : AppCompatActivity() {
 
-    private val web3: Web3j =
+    private val web3j: Web3j =
         Web3j.build(HttpService("https://fragrant-aged-wood.ropsten.quiknode.pro/bd3b90c5a36a4705dc374f9a7f4e00342926fedc/"))
 
     private val keyPair: ECKeyPair by lazy {
         Keys.createEcKeyPair()
     }
+
+    private var seed = ""
 
     private lateinit var binding: ActivityMainBinding
 
@@ -50,8 +55,8 @@ class MainActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                Timber.d("Version = ${web3.getClientVersion()}")
-                Timber.d("BlockNumber = ${web3.getBlockNumber()}")
+                Timber.d("Version = ${web3j.getClientVersion()}")
+                Timber.d("BlockNumber = ${web3j.getBlockNumber()}")
             } catch (e: InterruptedException) {
                 e.printStackTrace()
             } catch (e: ExecutionException) {
@@ -66,12 +71,12 @@ class MainActivity : AppCompatActivity() {
             Timber.d("Mnemonic = $mnemonic")
             binding.tvMnemonic.text = mnemonic
 
-            val seed = mnemonic.generateSeed().toHex()
+            seed = mnemonic.generateSeed().toHex()
             Timber.d("Seed = $seed")
             binding.tvSeed.text = seed
 
 
-            generateWallet(seed)
+
 //            val keyPair = mnemonic.generateKeyPair()
 //
 //            Timber.d("PrivateKey = ${keyPair.privateKey.toHex()}")
@@ -79,6 +84,10 @@ class MainActivity : AppCompatActivity() {
 //
 //            Timber.d("PublicKey = ${keyPair.publicKey.toHex()}")
 //            binding.tvPublicKey.text = keyPair.publicKey.toHex()
+        }
+
+        binding.btnCreateWallet.setOnClickListener {
+            generateWallet(seed)
         }
 
 
@@ -102,17 +111,31 @@ class MainActivity : AppCompatActivity() {
         return BigInteger(this).toHex()
     }
 
-    private fun generateWallet(seed: String): JSONObject {
+    private fun generateWallet(seed: String) {
+       generateEthereum(seed)
+    }
+
+    private fun generateEthereum(seed: String): JSONObject {
         val processJson = JSONObject()
         try {
             val ecKeyPair = Keys.createEcKeyPair()
             val privateKeyInDec = ecKeyPair.privateKey
             val sPrivateKeyInHex = privateKeyInDec.toString(16)
             val aWallet = Wallet.createLight(seed, ecKeyPair)
-            val sAddress = aWallet.address
+            val sAddress = "0x${aWallet.address}"
             aWallet.crypto.cipher
-            processJson.put("address", "0x$sAddress")
+            processJson.put("address", "$sAddress")
             processJson.put("privateKey", sPrivateKeyInHex)
+            Timber.d("Address = $sAddress")
+            Timber.d("PrivateKey = $sPrivateKeyInHex")
+            binding.tvPrivateKey.text = sPrivateKeyInHex
+            binding.tvPublicKey.text = ecKeyPair.publicKey.toString(16)
+            binding.tvAddress.text = "0x$sAddress"
+           getBalance(sAddress)
+
+
+            val contractAddress = "0xa849eaae994fb86afa73382e9bd88c2b6b18dc71"
+            getToken(sPrivateKeyInHex, contractAddress)
         } catch (e: CipherException) {
             e.printStackTrace()
         } catch (e: InvalidAlgorithmParameterException) {
@@ -125,5 +148,25 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
         return processJson
+    }
+
+    private fun getBalance(address: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val balance = web3j.run {
+                ethGetBalance(address, DefaultBlockParameterName.PENDING).sendAsync().get()
+            }.balance
+            Timber.d("Balance = $balance")
+        }
+
+    }
+
+    private fun getToken(privateKey: String, contractAddress: String) {
+        val credentials = Credentials.create(privateKey)
+        CoroutineScope(Dispatchers.IO).launch {
+            val token = ERC20.load(contractAddress, web3j, credentials, DefaultGasProvider())
+            val tokenName = token.name().sendAsync().get()
+            Timber.d("TokenName = $tokenName")
+        }
+
     }
 }

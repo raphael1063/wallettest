@@ -6,132 +6,151 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tv_mnemonic_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="40dp"
-        android:text="Mnemonic"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tv_mnemonic"
-        android:layout_marginTop="12dp"
+    <ScrollView
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_mnemonic_title"
-        tools:text="photo slogan nothing success kitten eyebrow sustain undo bus slender paddle behave stone sister myself pony reflect bunker tilt tumble capital immense topic amount" />
-
-    <TextView
-        android:id="@+id/tv_seed_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="40dp"
-        android:text="Seed"
-        android:textColor="@color/black"
-        android:textStyle="bold"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_generate_mnemonic"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_mnemonic" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tv_seed"
-        android:layout_marginTop="12dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_seed_title"
-        tools:text="73936624803317623009864037478425280556310475675407012350073560253574091202669" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_private_key_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="40dp"
-        android:text="Private Key"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_seed" />
+            <TextView
+                android:id="@+id/tv_mnemonic_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="40dp"
+                android:text="Mnemonic"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tv_private_key"
-        android:layout_marginTop="12dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_private_key_title"
-        tools:text="73936624803317623009864037478425280556310475675407012350073560253574091202669" />
+            <TextView
+                android:id="@+id/tv_mnemonic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/black"
+                tools:text="photo slogan nothing success kitten eyebrow sustain undo bus slender paddle behave stone sister myself pony reflect bunker tilt tumble capital immense topic amount" />
 
-    <TextView
-        android:id="@+id/tv_public_key_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="40dp"
-        android:text="Public Key"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_private_key" />
+            <TextView
+                android:id="@+id/tv_seed_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="40dp"
+                android:text="Seed"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/tv_public_key"
-        android:layout_marginTop="12dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_public_key_title"
-        tools:text="73936624803317623009864037478425280556310475675407012350073560253574091202669" />
+            <TextView
+                android:id="@+id/tv_seed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="12dp"
+                android:textColor="@color/black"
+                tools:text="73936624803317623009864037478425280556310475675407012350073560253574091202669" />
 
-    <TextView
-        android:id="@+id/tv_address_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:layout_marginTop="40dp"
-        android:text="Address"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_public_key" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_address"
-        android:layout_marginTop="12dp"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:textColor="@color/black"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_address_title"
-        tools:text="73936624803317623009864037478425280556310475675407012350073560253574091202669" />
+                <TextView
+                    android:id="@+id/tv_coin_type"
+                    android:layout_width="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:textColor="@color/purple_500"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20dp"
+                    android:layout_height="wrap_content"
+                    tools:text="ETHEREUM" />
+
+                <TextView
+                    android:id="@+id/tv_private_key_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Private Key"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_private_key"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/black"
+                    tools:text="73936624803317623009864037478425280556310475675407012350073560253574091202669" />
+
+                <TextView
+                    android:id="@+id/tv_public_key_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="40dp"
+                    android:text="Public Key"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_public_key"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/black"
+                    tools:text="73936624803317623009864037478425280556310475675407012350073560253574091202669" />
+
+                <TextView
+                    android:id="@+id/tv_address_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="40dp"
+                    android:text="Address"
+                    android:textColor="@color/black"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/black"
+                    tools:text="73936624803317623009864037478425280556310475675407012350073560253574091202669" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
 
     <Button
         android:id="@+id/btn_generate_mnemonic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
         android:text="Generate Mnemonic"
+        app:layout_constraintBottom_toTopOf="@+id/btn_create_wallet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_create_wallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="22dp"
+        android:text="Create Wallet"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
