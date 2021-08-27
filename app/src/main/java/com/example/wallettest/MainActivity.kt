@@ -23,11 +23,11 @@ import org.web3j.crypto.Wallet
 
 import org.web3j.crypto.Keys
 
-import org.web3j.crypto.ECKeyPair
-
 import org.json.JSONObject
 import org.web3j.contracts.eip20.generated.ERC20
 import org.web3j.protocol.core.DefaultBlockParameterName
+import org.web3j.tx.Contract
+import org.web3j.tx.exceptions.ContractCallException
 import org.web3j.tx.gas.DefaultGasProvider
 import java.security.InvalidAlgorithmParameterException
 import java.security.NoSuchAlgorithmException
@@ -39,9 +39,7 @@ class MainActivity : AppCompatActivity() {
     private val web3j: Web3j =
         Web3j.build(HttpService("https://fragrant-aged-wood.ropsten.quiknode.pro/bd3b90c5a36a4705dc374f9a7f4e00342926fedc/"))
 
-    private val keyPair: ECKeyPair by lazy {
-        Keys.createEcKeyPair()
-    }
+    private var mnemonic = ""
 
     private var seed = ""
 
@@ -67,23 +65,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnGenerateMnemonic.setOnClickListener {
-            val mnemonic = getMnemonic(32)
+            mnemonic = getMnemonic(32)
             Timber.d("Mnemonic = $mnemonic")
             binding.tvMnemonic.text = mnemonic
 
             seed = mnemonic.generateSeed().toHex()
             Timber.d("Seed = $seed")
             binding.tvSeed.text = seed
-
-
-
-//            val keyPair = mnemonic.generateKeyPair()
-//
-//            Timber.d("PrivateKey = ${keyPair.privateKey.toHex()}")
-//            binding.tvPrivateKey.text = keyPair.privateKey.toHex()
-//
-//            Timber.d("PublicKey = ${keyPair.publicKey.toHex()}")
-//            binding.tvPublicKey.text = keyPair.publicKey.toHex()
         }
 
         binding.btnCreateWallet.setOnClickListener {
@@ -118,24 +106,25 @@ class MainActivity : AppCompatActivity() {
     private fun generateEthereum(seed: String): JSONObject {
         val processJson = JSONObject()
         try {
-            val ecKeyPair = Keys.createEcKeyPair()
+//            val ecKeyPair = Keys.createEcKeyPair()
+            val ecKeyPair = mnemonic.generateKeyPair()
             val privateKeyInDec = ecKeyPair.privateKey
-            val sPrivateKeyInHex = privateKeyInDec.toString(16)
-            val aWallet = Wallet.createLight(seed, ecKeyPair)
-            val sAddress = "0x${aWallet.address}"
-            aWallet.crypto.cipher
-            processJson.put("address", "$sAddress")
-            processJson.put("privateKey", sPrivateKeyInHex)
-            Timber.d("Address = $sAddress")
-            Timber.d("PrivateKey = $sPrivateKeyInHex")
-            binding.tvPrivateKey.text = sPrivateKeyInHex
+            val privateKeyInHex = privateKeyInDec.toString(16)
+            val wallet = Wallet.createLight(seed, ecKeyPair)
+            val walletAddress = "0x${wallet.address}"
+            wallet.crypto.cipher
+            processJson.put("address", "$walletAddress")
+            processJson.put("privateKey", privateKeyInHex)
+            Timber.d("Address = $walletAddress")
+            Timber.d("PrivateKey = $privateKeyInHex")
+            binding.tvPrivateKey.text = privateKeyInHex
             binding.tvPublicKey.text = ecKeyPair.publicKey.toString(16)
-            binding.tvAddress.text = "0x$sAddress"
-           getBalance(sAddress)
+            binding.tvAddress.text = "0x$walletAddress"
+           getBalance(walletAddress)
 
 
             val contractAddress = "0xa849eaae994fb86afa73382e9bd88c2b6b18dc71"
-            getToken(sPrivateKeyInHex, contractAddress)
+            getToken(ecKeyPair, contractAddress)
         } catch (e: CipherException) {
             e.printStackTrace()
         } catch (e: InvalidAlgorithmParameterException) {
@@ -160,12 +149,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun getToken(privateKey: String, contractAddress: String) {
-        val credentials = Credentials.create(privateKey)
+    private fun getToken(ecKeyPair: ECKeyPair, contractAddress: String) {
+        val credentials = Credentials.create(ecKeyPair)
         CoroutineScope(Dispatchers.IO).launch {
-            val token = ERC20.load(contractAddress, web3j, credentials, DefaultGasProvider())
-            val tokenName = token.name().sendAsync().get()
-            Timber.d("TokenName = $tokenName")
+            try {
+                val token = ERC20.load(contractAddress, web3j, credentials, DefaultGasProvider())
+                val tokenName = token.name().send()
+                Timber.d("TokenName = $tokenName")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
     }
